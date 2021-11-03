@@ -1,6 +1,7 @@
-module Counter exposing (Model, Msg, init, update, view, initWidget)
+module Counter exposing (initWidget)
 
-import AltComposition exposing (View, Widget, join)
+import AltComposition exposing (View)
+import Widget exposing (Widget)
 import Debug
 import Html exposing (..)
 import Html.Attributes exposing (style)
