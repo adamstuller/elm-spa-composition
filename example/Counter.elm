@@ -1,11 +1,14 @@
-module Counter exposing (initWidget)
+module Counter exposing (initPageWidget, initWidget)
 
 import AltComposition exposing (View)
-import Widget exposing (Widget)
 import Debug
+import Flip exposing (flip)
 import Html exposing (..)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
+import Page exposing (PageWidget)
+import Router exposing (update)
+import Widget exposing (Widget)
 
 
 type alias Model =
@@ -47,4 +50,17 @@ initWidget int =
     { init = init int
     , update = update
     , view = view
+    }
+
+
+initPageWidget : Int -> PageWidget Model Msg ()
+initPageWidget int =
+    let
+        updateEffectfull =
+            \msg model -> ( update msg model, Cmd.none )
+    in
+    { init = \() -> ( init int, Cmd.none )
+    , update = updateEffectfull
+    , view = view
+    , subscriptions = always Sub.none
     }
