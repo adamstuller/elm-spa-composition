@@ -3,14 +3,15 @@ module Main exposing (main)
 import Browser
 import CheckBox
 import Counter
-import Html
-import Utils exposing (wrapView)
-import Widget exposing (join)
-import Page
 import Flip exposing (flip)
-import TicToc 
-import Utils exposing (wrapViewEffects)
+import Html
 import Page
+import TicToc
+import Utils exposing (wrapView, wrapViewEffects)
+import Widget exposing (join)
+import Router
+
+
 
 -- main =
 --     CheckBox.initWidget True
@@ -29,12 +30,46 @@ import Page
 --         |> Browser.sandbox
 
 
-main = Page.join (TicToc.initPageWidget 1000) (Counter.initPageWidget 12)
-    |> flip Page.add (CheckBox.initPageWidget True)
-    |> flip Page.add (TicToc.initPageWidget 500)
-    |> flip Page.add (TicToc.initPageWidget 500)
-    |> flip Page.add (TicToc.initPageWidget 500)
-    -- |> Page.initApplication
-    |> Page.toWidgetEffectful
-    -- |> wrapViewEffects -- adds debug print of model
-    |> Browser.element
+main =
+    Page.join (TicToc.initPageWidget "titktok" 1000) (Counter.initPageWidget "counter" 12)
+        |> flip Page.add (CheckBox.initPageWidget "checkbox" True)
+        |> flip Page.add (CheckBox.initPageWidget "checkbox2" True)
+        |> flip Page.add (CheckBox.initPageWidget "checkbox3" True)
+        |> flip Page.add (CheckBox.initPageWidget "checkbox4" True)
+        |> flip Page.add (CheckBox.initPageWidget "checkbox5" True)
+        |> Page.initApplication
+        |> Router.initRouter
+        |> Browser.application
+
+
+
+
+{-- 
+    -> router 
+    -> componenty 
+        -> stateless - funkcia
+        -> statefull - typovy sucin
+    -> session*
+    -> 
+
+
+    -> prerobenie ukazkovej aplikacie
+    -> upratanie 
+    -> dokoncim:
+        -> analyze rozsirit spa 
+        -> navrh a dokumentacia
+        -> plan na dalsi 
+
+    ----------------------------------
+    -> prerobit ten elm-spa-example
+
+    KAPITOLA navrh
+        specifikacia - bez konkretnych veci, co by sa malo robit - vid hore router atd
+        widfet
+        stranka 
+        router
+
+    PLAN na posledny semester
+        -> prerob
+        -> popis overenie 
+--} 

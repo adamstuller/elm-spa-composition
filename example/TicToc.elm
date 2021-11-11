@@ -5,8 +5,8 @@ module TicToc exposing (initPageWidget)
 import Html exposing (Html)
 import Html.Attributes exposing (checked, type_)
 import Html.Events exposing (onClick)
+import Page exposing (PageWidget, Route, Subscription, Update, View)
 import Time
-import Page exposing (Update, Subscription, View, PageWidget)
 
 
 type alias Model =
@@ -71,9 +71,10 @@ sub model =
     else
         Sub.none
 
-initPageWidget : Float -> PageWidget Model Msg ()
-initPageWidget float =
-    { init = init float
+
+initPageWidget : Route -> Float -> PageWidget Model Msg ()
+initPageWidget route float =
+    { init = ( init float, route )
     , update = update
     , view = view
     , subscriptions = sub

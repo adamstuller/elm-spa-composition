@@ -3,7 +3,7 @@ module CheckBox exposing (initPageWidget, initWidget)
 import Html exposing (Html)
 import Html.Attributes exposing (checked, type_)
 import Html.Events exposing (onClick)
-import Page exposing (PageWidget)
+import Page exposing (PageWidget, Route)
 import Router exposing (Msg)
 import Widget exposing (Widget)
 
@@ -44,13 +44,13 @@ initWidget bool =
     }
 
 
-initPageWidget : Bool -> PageWidget Model Msg ()
-initPageWidget bool =
+initPageWidget : Route -> Bool -> PageWidget Model Msg ()
+initPageWidget route bool =
     let
         updateEffectfull =
             \msg model -> ( update msg model, Cmd.none )
     in
-    { init = \() -> ( init bool, Cmd.none )
+    { init = ( \() -> ( init bool, Cmd.none ), route )
     , update = updateEffectfull
     , view = view
     , subscriptions = always Sub.none
