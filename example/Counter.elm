@@ -7,7 +7,6 @@ import Html exposing (..)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import Page exposing (PageWidget, Route)
-import Router exposing (update)
 import Widget exposing (Widget)
 
 
@@ -53,13 +52,13 @@ initWidget int =
     }
 
 
-initPageWidget : Route -> Int -> PageWidget Model Msg ()
+initPageWidget : Route -> Int -> PageWidget Model Msg 
 initPageWidget route int =
     let
         updateEffectfull =
             \msg model -> ( update msg model, Cmd.none )
     in
-    { init = ( \() -> ( init int, Cmd.none ), route )
+    { init = ( ( init int, Cmd.none ), route )
     , update = updateEffectfull
     , view = view
     , subscriptions = always Sub.none

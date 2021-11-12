@@ -6,10 +6,10 @@ import Counter
 import Flip exposing (flip)
 import Html
 import Page
-import TicToc
-import Utils exposing (wrapView, wrapViewEffects)
-import Widget exposing (join)
 import Router
+import TicToc
+import Utils exposing (wrapView)
+import Widget exposing (join)
 
 
 
@@ -31,20 +31,19 @@ import Router
 
 
 main =
-    Page.join (TicToc.initPageWidget "titktok" 1000) (Counter.initPageWidget "counter" 12)
-        |> flip Page.add (CheckBox.initPageWidget "checkbox" True)
-        |> flip Page.add (CheckBox.initPageWidget "checkbox2" True)
-        |> flip Page.add (CheckBox.initPageWidget "checkbox3" True)
-        |> flip Page.add (CheckBox.initPageWidget "checkbox4" True)
-        |> flip Page.add (CheckBox.initPageWidget "checkbox5" True)
-        |> Page.initApplication
+    TicToc.initPageWidget "/titktok" 1000
+        |> Page.join (Counter.initPageWidget "/counter" 12)
+        |> flip Page.add (CheckBox.initPageWidget "/checkbox" True)
+        |> flip Page.add (CheckBox.initPageWidget "/checkbox2" True)
+        |> flip Page.add (CheckBox.initPageWidget "/checkbox3" True)
+        |> flip Page.add (CheckBox.initPageWidget "/checkbox4" True)
+        |> flip Page.add (CheckBox.initPageWidget "/checkbox5" True)
         |> Router.initRouter
         |> Browser.application
 
 
 
-
-{-- 
+{--
     -> router 
     -> componenty 
         -> stateless - funkcia
@@ -72,4 +71,4 @@ main =
     PLAN na posledny semester
         -> prerob
         -> popis overenie 
---} 
+--}

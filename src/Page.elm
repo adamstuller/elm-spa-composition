@@ -32,17 +32,17 @@ This is a first step in the _"oneOfInits+[orInit]"-chain_.
 
 -}
 oneOfInits :
-    Both (flags -> ( model1, Cmd msg1 )) Route
-    -> Both (flags -> ( model2, Cmd msg2 )) Route
-    -> ( Either () () -> flags -> ( Either model1 model2, Cmd (Either msg1 msg2) ), Nonempty (Either () ()), Nonempty Route )
+    Both (( model1, Cmd msg1 )) Route
+    -> Both ( ( model2, Cmd msg2 )) Route
+    -> ( Either () () -> ( Either model1 model2, Cmd (Either msg1 msg2) ), Nonempty (Either () ()), Nonempty Route )
 oneOfInits ( init1, route1 ) ( init2, route2 ) =
     ( \path ->
         case path of
             Left () ->
-                \flags -> Tuple.mapBoth Left (Cmd.map Left) <| init1 flags
+                Tuple.mapBoth Left (Cmd.map Left) <| init1 
 
             Right () ->
-                \flags -> Tuple.mapBoth Right (Cmd.map Right) <| init2 flags
+                Tuple.mapBoth Right (Cmd.map Right) <| init2 
     , NE.cons (Left ()) <| NE.fromElement (Right ())
     , NE.cons route1 <| NE.fromElement route2
     )
@@ -51,19 +51,19 @@ oneOfInits ( init1, route1 ) ( init2, route2 ) =
 {-| Adds an another init to the _"oneOfInits+[orInit]"-chain_.
 -}
 orInit :
-    ( path -> flags -> ( model1, Cmd msg1 ), Nonempty path, Nonempty Route )
-    -> Both (flags -> ( model2, Cmd msg2 )) Route
-    -> ( Either path () -> flags -> ( Either model1 model2, Cmd (Either msg1 msg2) ), Nonempty (Either path ()), Nonempty Route )
+    ( path ->  ( model1, Cmd msg1 ), Nonempty path, Nonempty Route )
+    -> Both (( model2, Cmd msg2 )) Route
+    -> ( Either path () ->( Either model1 model2, Cmd (Either msg1 msg2) ), Nonempty (Either path ()), Nonempty Route )
 orInit ( next, ps, routes ) ( init2, route2 ) =
     ( \path ->
         case path of
             Left p ->
-                \flags ->
-                    Tuple.mapBoth Left (Cmd.map Left) <| next p flags
+                
+                    Tuple.mapBoth Left (Cmd.map Left) <| next p 
 
             Right () ->
-                \flags ->
-                    Tuple.mapBoth Right (Cmd.map Right) <| init2 flags
+                
+                    Tuple.mapBoth Right (Cmd.map Right) <| init2 
     , NE.append
         (NE.map Left ps)
       <|
@@ -93,16 +93,16 @@ initWith init1 init2 flags =
     )
 
 initWithRouter :
-    (flags -> ( model1, Cmd msg1 ))
-    -> (() -> Url.Url -> Navigation.Key -> ( model2, Cmd msg2 ))
-    -> (flags -> Url.Url -> Navigation.Key -> ( Both model1 model2, Cmd (Either msg1 msg2) ))
-initWithRouter init1 init2 flags url key =
+    (( model1, Cmd msg1 ))
+    -> (Url.Url -> Navigation.Key -> ( model2, Cmd msg2 ))
+    -> ( Url.Url -> Navigation.Key -> ( Both model1 model2, Cmd (Either msg1 msg2) ))
+initWithRouter init1 init2  url key =
     let
         ( m2, c2 ) =
-            init2 () url key
+            init2 url key
 
         ( m1, c1 ) =
-            init1 flags
+            init1 
     in
     ( ( m1, m2 )
     , Cmd.batch
@@ -192,37 +192,28 @@ eitherView v1 v2 m =
             Html.map Right <| v2 m2
 
 
-type alias PageWidget model msg flags =
-    { init : Both (flags -> ( model, Cmd msg )) Route
+type alias PageWidget model msg =
+    { init : Both  ( model, Cmd msg ) Route
     , view : View model msg
     , update : Update model msg
     , subscriptions : Subscription model msg
     }
 
 
-type alias PageWidgetComposition model msg flags path =
-    { init : ( path -> flags -> ( model, Cmd msg ), Nonempty path, Nonempty Route )
+type alias PageWidgetComposition model msg path =
+    { init : ( path -> ( model, Cmd msg ), Nonempty path, Nonempty Route )
     , view : View model msg
     , update : Update model msg
     , subscriptions : Subscription model msg
     }
 
 
-type alias PageWidgetComposed model msg flags path =
-    { init : flags -> ( model, Cmd msg )
-    , view : View model msg
-    , update : Update model msg
-    , subscriptions : Subscription model msg
-    , routingRules : Nonempty (Both path Route)
-    }
-
-
-type alias WidgetEffectfull model msg flags =
-    { init : flags -> ( model, Cmd msg )
-    , view : model -> Html msg
-    , update : msg -> model -> ( model, Cmd msg )
-    , subscriptions : model -> Sub msg
-    }
+-- type alias WidgetEffectfull model msg flags =
+--     { init :  ( model, Cmd msg )
+--     , view : model -> Html msg
+--     , update : msg -> model -> ( model, Cmd msg )
+--     , subscriptions : model -> Sub msg
+--     }
 
 
 type alias ApplicationWithRouter model msg flags =
@@ -234,7 +225,7 @@ type alias ApplicationWithRouter model msg flags =
     , onUrlRequest : UrlRequest -> msg
     }
 
-join : PageWidget model1 msg1 flags -> PageWidget model2 msg2 flags -> PageWidgetComposition (Either model1 model2) (Either msg1 msg2) flags (Either () ())
+join : PageWidget model1 msg1  -> PageWidget model2 msg2  -> PageWidgetComposition (Either model1 model2) (Either msg1 msg2)  (Either () ())
 join w1 w2 =
     { init = oneOfInits w1.init w2.init
     , view = eitherView w1.view w2.view
@@ -243,7 +234,7 @@ join w1 w2 =
     }
 
 
-add : PageWidgetComposition model1 msg1 flags path -> PageWidget model2 msg2 flags -> PageWidgetComposition (Either model1 model2) (Either msg1 msg2) flags (Either path ())
+add : PageWidgetComposition model1 msg1  path -> PageWidget model2 msg2  -> PageWidgetComposition (Either model1 model2) (Either msg1 msg2)  (Either path ())
 add w1 w2 =
     { init = orInit w1.init w2.init
     , view = eitherView w1.view w2.view
@@ -252,49 +243,25 @@ add w1 w2 =
     }
 
 
-toWidgetEffectful : PageWidgetComposition model msg flags path -> WidgetEffectfull model msg flags
-toWidgetEffectful w =
-    let
-        ( select, paths, routes ) =
-            w.init
+-- toWidgetEffectful : PageWidgetComposition model msg  path -> WidgetEffectfull model msg 
+-- toWidgetEffectful w =
+--     let
+--         ( select, paths, routes ) =
+--             w.init
 
-        path =
-            NE.head paths
+--         path =
+--             NE.head paths
 
-        init =
-            select path
+--         init =
+--             select path
 
-        view =
-            \model -> Html.div [] [ w.view model ]
-    in
-    { init = init
-    , view = view
-    , update = w.update
-    , subscriptions = w.subscriptions
-    }
+--         view =
+--             \model -> Html.div [] [ w.view model ]
+--     in
+--     { init = init
+--     , view = view
+--     , update = w.update
+--     , subscriptions = w.subscriptions
+--     }
 
 
-initApplication : PageWidgetComposition model msg flags path -> PageWidgetComposed model msg flags path
-initApplication w =
-    let
-        ( select, paths, routes ) =
-            w.init
-
-        routingRules =
-            NE.zip paths routes
-
-        path =
-            NE.head paths
-
-        init =
-            select path
-
-        view =
-            \model -> Html.div [] [ w.view model ]
-    in
-    { init = init
-    , view = view
-    , update = w.update
-    , subscriptions = w.subscriptions
-    , routingRules = routingRules
-    }

@@ -44,13 +44,13 @@ initWidget bool =
     }
 
 
-initPageWidget : Route -> Bool -> PageWidget Model Msg ()
+initPageWidget : Route -> Bool -> PageWidget Model Msg
 initPageWidget route bool =
     let
         updateEffectfull =
             \msg model -> ( update msg model, Cmd.none )
     in
-    { init = ( \() -> ( init bool, Cmd.none ), route )
+    { init = ( ( init bool, Cmd.none ), route )
     , update = updateEffectfull
     , view = view
     , subscriptions = always Sub.none

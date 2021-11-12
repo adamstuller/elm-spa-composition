@@ -21,8 +21,8 @@ type Msg
     | Tick
 
 
-init : Float -> flags -> ( Model, Cmd Msg )
-init i _ =
+init : Float  -> ( Model, Cmd Msg )
+init i =
     ( { interval = i
       , state = True
       , enabled = True
@@ -72,7 +72,7 @@ sub model =
         Sub.none
 
 
-initPageWidget : Route -> Float -> PageWidget Model Msg ()
+initPageWidget : Route -> Float -> PageWidget Model Msg 
 initPageWidget route float =
     { init = ( init float, route )
     , update = update
