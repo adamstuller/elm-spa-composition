@@ -4,11 +4,11 @@ import Browser
 import CheckBox
 import Counter
 import Flip exposing (flip)
-import Html
+import Navbar exposing (navbar)
 import Page
-import Router
+import Platform exposing (Router)
+import Router exposing (Navbar)
 import TicToc
-import Utils exposing (wrapView)
 import Widget exposing (join)
 
 
@@ -26,8 +26,11 @@ import Widget exposing (join)
 --         |> join (CheckBox.initWidget True)
 --         |> join (CheckBox.initWidget True)
 --         |> join (CheckBox.initWidget True)
---         |> wrapView -- adds debug print of model
 --         |> Browser.sandbox
+
+title: String
+title =
+    "SPA simple demo"
 
 
 main =
@@ -37,38 +40,10 @@ main =
         |> flip Page.add (CheckBox.initPageWidget "/checkbox2" True)
         |> flip Page.add (CheckBox.initPageWidget "/checkbox3" True)
         |> flip Page.add (CheckBox.initPageWidget "/checkbox4" True)
+        |> flip Page.add (Counter.initPageWidget "/counter2" 1000)
+        |> flip Page.add (CheckBox.initPageWidget "/checkbox3" True)
+        |> flip Page.add (CheckBox.initPageWidget "/checkbox4" True)
         |> flip Page.add (CheckBox.initPageWidget "/checkbox5" True)
-        |> Router.initRouter
+        |> flip Page.add (TicToc.initPageWidget "/titktok2" 500)
+        |> Router.initRouter title Navbar.navbar
         |> Browser.application
-
-
-
-{--
-    -> router 
-    -> componenty 
-        -> stateless - funkcia
-        -> statefull - typovy sucin
-    -> session*
-    -> 
-
-
-    -> prerobenie ukazkovej aplikacie
-    -> upratanie 
-    -> dokoncim:
-        -> analyze rozsirit spa 
-        -> navrh a dokumentacia
-        -> plan na dalsi 
-
-    ----------------------------------
-    -> prerobit ten elm-spa-example
-
-    KAPITOLA navrh
-        specifikacia - bez konkretnych veci, co by sa malo robit - vid hore router atd
-        widfet
-        stranka 
-        router
-
-    PLAN na posledny semester
-        -> prerob
-        -> popis overenie 
---}

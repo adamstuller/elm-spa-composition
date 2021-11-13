@@ -1,14 +1,13 @@
-module Router exposing (..)
+module Router exposing (Navbar, emptyNavbar, initRouter)
 
 import AltComposition exposing (Both)
-import Browser exposing (UrlRequest, application)
+import Browser exposing (UrlRequest)
 import Browser.Navigation as Nav
 import Either exposing (Either(..))
-import Html exposing (Html, a, b, div, li, select, text, ul)
-import Html.Attributes exposing (default, href, style)
-import Html.Events exposing (onClick)
+import Html exposing (Html)
+import Html.Attributes exposing (default, href)
 import List.Nonempty as NE exposing (Nonempty)
-import Page exposing (ApplicationWithRouter, PageWidgetComposition, Subscription, Update, View, initWith, initWithRouter, subscribeWith, updateWith)
+import Page exposing (ApplicationWithRouter, PageWidgetComposition, Route, subscribeWith)
 import Url
 
 
@@ -19,48 +18,20 @@ type alias Model =
 
 
 type Msg
-    = LinkClicked Browser.UrlRequest
+    = LinkClicked UrlRequest
     | UrlChanged Url.Url
 
 
-
--- updateRouter : Msg -> Model -> ( Model, Cmd Msg )
--- updateRouter msg model =
---     case msg of
---         LinkClicked urlRequest ->
---             case urlRequest of
---                 Browser.Internal url ->
---                     ( model, Nav.pushUrl model.key (Url.toString url) )
---                 Browser.External href ->
---                     ( model, Nav.load href )
---         UrlChanged url ->
---             ( { model | url = url }
---             , Cmd.none
---             )
+type alias Navbar =
+    Nonempty String -> Url.Url -> Html Msg
 
 
-subscriptions : Subscription Model Msg
-subscriptions model =
-    Sub.none
+emptyNavbar : Navbar
+emptyNavbar routingRules url =
+    Html.div [] []
 
 
-viewLink : String -> Html msg
-viewLink path =
-    li [] [ a [ href path ] [ text path ] ]
-
-
-navbar : Nonempty String -> Url.Url -> Html Msg
-navbar routingRules url =
-    div []
-        [ text "The current URL is: "
-        , b [] [ text (Url.toString url) ]
-        , ul [] <|
-            NE.toList <|
-                NE.map viewLink routingRules
-        ]
-
-
-pathFromUrl : Nonempty ( path, String ) -> Url.Url -> path
+pathFromUrl : Nonempty ( path, Route ) -> Url.Url -> path
 pathFromUrl rules url =
     let
         default =
@@ -75,9 +46,11 @@ pathFromUrl rules url =
 
 
 initRouter :
-    PageWidgetComposition model msg path
+    String
+    -> Navbar
+    -> PageWidgetComposition model msg path
     -> ApplicationWithRouter (Both model Model) (Either msg Msg) ()
-initRouter w =
+initRouter title n w =
     let
         ( select, paths, routes ) =
             w.init
@@ -100,10 +73,15 @@ initRouter w =
                             LinkClicked urlRequest ->
                                 case urlRequest of
                                     Browser.Internal internalUrl ->
-                                        ( ( models, Model key internalUrl ), Cmd.map Right <| Nav.pushUrl key (Url.toString internalUrl) )
+                                        ( ( models, Model key internalUrl )
+                                        , Cmd.map Right <|
+                                            Nav.pushUrl key (Url.toString internalUrl)
+                                        )
 
                                     Browser.External href ->
-                                        ( ( models, Model key url ), Cmd.map Right <| Nav.load href )
+                                        ( ( models, Model key url )
+                                        , Cmd.map Right <| Nav.load href
+                                        )
 
                             UrlChanged newUrl ->
                                 let
@@ -122,20 +100,23 @@ initRouter w =
             ( ( model, { key = key, url = url } ), Cmd.map Left cmd )
 
         view =
-            \( models, { key, url } ) ->
-                { title = "SPA"
+            \( models, { url } ) ->
+                { title = title
                 , body =
                     [ Html.div []
-                        [ Html.map Right <| navbar routes url
+                        [ Html.map Right <| n routes url
                         , Html.map Left <| w.view models
                         ]
                     ]
                 }
+
+        subscriptions =
+            subscribeWith w.subscriptions (always Sub.none)
     in
     { init = \() -> init
     , view = view
     , update = update
-    , subscriptions = subscribeWith w.subscriptions subscriptions
+    , subscriptions = subscriptions
     , onUrlChange = \url -> Right <| UrlChanged url
     , onUrlRequest = \urlRequest -> Right <| LinkClicked urlRequest
     }
