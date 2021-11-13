@@ -10,6 +10,8 @@ import Platform exposing (Router)
 import Router exposing (Navbar)
 import TicToc
 import Widget exposing (join)
+import AltComposition.Common exposing (Both)
+import Either exposing (Either)
 
 
 

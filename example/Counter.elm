@@ -1,6 +1,6 @@
-module Counter exposing (initPageWidget, initWidget)
+module Counter exposing (initPageWidget, initWidget, Model, Msg)
 
-import AltComposition exposing (View)
+import AltComposition.Pure exposing (View)
 import Debug
 import Html exposing (..)
 import Html.Attributes exposing (style)
@@ -51,13 +51,13 @@ initWidget int =
     }
 
 
-initPageWidget : Route -> Int -> PageWidget Model Msg 
+initPageWidget : Route -> Int -> PageWidget Model Msg flags
 initPageWidget route int =
     let
         updateEffectfull =
             \msg model -> ( update msg model, Cmd.none )
     in
-    { init = ( ( init int, Cmd.none ), route )
+    { init = ( always ( init int, Cmd.none ), route )
     , update = updateEffectfull
     , view = view
     , subscriptions = always Sub.none

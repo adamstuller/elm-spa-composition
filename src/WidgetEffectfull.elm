@@ -3,7 +3,8 @@ module WidgetEffectfull exposing (..)
 -- import AltComposition exposing (..)
 import Either exposing (Either)
 import Html exposing (Html)
-import AltComposition exposing (Both)
+import AltComposition.Common exposing (Both)
+
 
 
 type alias Subscription model msg =

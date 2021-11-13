@@ -1,4 +1,4 @@
-module TicToc exposing (initPageWidget)
+module TicToc exposing (initPageWidget, Model)
 
 -- local imports
 
@@ -21,8 +21,8 @@ type Msg
     | Tick
 
 
-init : Float  -> ( Model, Cmd Msg )
-init i =
+init : Float -> flags -> ( Model, Cmd Msg )
+init i _ =
     ( { interval = i
       , state = True
       , enabled = True
@@ -72,7 +72,7 @@ sub model =
         Sub.none
 
 
-initPageWidget : Route -> Float -> PageWidget Model Msg 
+initPageWidget : Route -> Float -> PageWidget Model Msg flags
 initPageWidget route float =
     { init = ( init float, route )
     , update = update

@@ -1,6 +1,6 @@
-module Router exposing (Navbar, emptyNavbar, initRouter)
+module Router exposing (Navbar, emptyNavbar, initRouter, Flags)
 
-import AltComposition exposing (Both)
+import AltComposition.Common exposing (Both)
 import Browser exposing (UrlRequest)
 import Browser.Navigation as Nav
 import Either exposing (Either(..))
@@ -9,11 +9,14 @@ import Html.Attributes exposing (default, href)
 import List.Nonempty as NE exposing (Nonempty)
 import Page exposing (ApplicationWithRouter, PageWidgetComposition, Route, subscribeWith)
 import Url
+import Json.Decode
 
+type alias Flags = Json.Decode.Value
 
 type alias Model =
     { key : Nav.Key
     , url : Url.Url
+    , flags : Flags
     }
 
 
@@ -48,8 +51,8 @@ pathFromUrl rules url =
 initRouter :
     String
     -> Navbar
-    -> PageWidgetComposition model msg path
-    -> ApplicationWithRouter (Both model Model) (Either msg Msg) ()
+    -> PageWidgetComposition model msg path Flags
+    -> ApplicationWithRouter (Both model Model) (Either msg Msg) Flags
 initRouter title n w =
     let
         ( select, paths, routes ) =
@@ -59,45 +62,45 @@ initRouter title n w =
             NE.zip paths routes
 
         update =
-            \msg ( models, { url, key } ) ->
+            \msg ( models, { url, key, flags} ) ->
                 case msg of
                     Left subMsg ->
                         let
                             ( subModel, subCmd ) =
                                 w.update subMsg models
                         in
-                        ( ( subModel, Model key url ), Cmd.map Left subCmd )
+                        ( ( subModel, Model key url flags ), Cmd.map Left subCmd )
 
                     Right routerMsg ->
                         case routerMsg of
                             LinkClicked urlRequest ->
                                 case urlRequest of
                                     Browser.Internal internalUrl ->
-                                        ( ( models, Model key internalUrl )
+                                        ( ( models, Model key internalUrl flags )
                                         , Cmd.map Right <|
                                             Nav.pushUrl key (Url.toString internalUrl)
                                         )
 
                                     Browser.External href ->
-                                        ( ( models, Model key url )
+                                        ( ( models, Model key url flags)
                                         , Cmd.map Right <| Nav.load href
                                         )
 
                             UrlChanged newUrl ->
                                 let
                                     ( subModel, subCmd ) =
-                                        select (pathFromUrl routingRules newUrl)
+                                        select (pathFromUrl routingRules newUrl) flags
                                 in
-                                ( ( subModel, Model key url )
+                                ( ( subModel, Model key url flags)
                                 , Cmd.map Left subCmd
                                 )
 
-        init url key =
+        init flags url key =
             let
                 ( model, cmd ) =
-                    select (pathFromUrl routingRules url)
+                    select (pathFromUrl routingRules url) flags
             in
-            ( ( model, { key = key, url = url } ), Cmd.map Left cmd )
+            ( ( model, Model key url flags ), Cmd.map Left cmd )
 
         view =
             \( models, { url } ) ->
@@ -113,7 +116,7 @@ initRouter title n w =
         subscriptions =
             subscribeWith w.subscriptions (always Sub.none)
     in
-    { init = \() -> init
+    { init = init
     , view = view
     , update = update
     , subscriptions = subscriptions

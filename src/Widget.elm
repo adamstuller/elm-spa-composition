@@ -1,6 +1,7 @@
 module Widget exposing (..)
 
-import AltComposition exposing (..)
+import AltComposition.Pure exposing (..)
+import AltComposition.Common exposing (Both)
 import Either exposing (Either)
 
 

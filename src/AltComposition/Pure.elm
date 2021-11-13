@@ -1,16 +1,9 @@
-module AltComposition exposing (Both, Update, View, composeViews, initWith, joinViews, updateWith, viewBoth, viewWith)
+module AltComposition.Pure exposing (Update, View, composeViews, initWith, joinViews, updateWith, viewBoth, viewWith)
 
+import AltComposition.Common exposing (Both)
 import Either exposing (Either(..))
 import Html exposing (Html)
 import List
-
-
-
--- TODO: may be represented as Tree with named all branching options
-
-
-type alias Both a b =
-    ( a, b )
 
 
 type alias View model msg =
