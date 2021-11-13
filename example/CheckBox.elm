@@ -4,7 +4,6 @@ import Html exposing (Html)
 import Html.Attributes exposing (checked, type_)
 import Html.Events exposing (onClick)
 import Page exposing (PageWidget, Route)
-import Router exposing (Msg)
 import Widget exposing (Widget)
 
 

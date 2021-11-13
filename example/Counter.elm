@@ -2,7 +2,6 @@ module Counter exposing (initPageWidget, initWidget)
 
 import AltComposition exposing (View)
 import Debug
-import Flip exposing (flip)
 import Html exposing (..)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
