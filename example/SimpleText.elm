@@ -4,8 +4,8 @@ import AltComposition.Pure exposing (View)
 import Html exposing (..)
 import Json.Decode exposing (Decoder, decodeValue, field, string)
 import Page exposing (PageWidget, Route)
-import Widget exposing (Widget)
 import Router exposing (Flags)
+import Widget exposing (Widget)
 
 
 flagsDecoder : Decoder String
@@ -45,18 +45,18 @@ initWidget s =
 
 
 initPageWidget : Route -> String -> PageWidget Model Msg Flags
-initPageWidget route s =
+initPageWidget route defaultText =
     let
         updateEffectfull =
             \msg model -> ( update msg model, Cmd.none )
 
         initWithFlags f =
             case decodeValue flagsDecoder f of
-                Ok decodedString ->
-                    (decodedString, Cmd.none)
+                Ok decodedText ->
+                    ( decodedText, Cmd.none )
 
                 Err _ ->
-                    (s, Cmd.none)
+                    ( defaultText, Cmd.none )
     in
     { init = ( initWithFlags, route )
     , update = updateEffectfull
