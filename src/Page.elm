@@ -27,57 +27,6 @@ type alias Route =
     String
 
 
-initWith :
-    (flags -> ( model1, Cmd msg1 ))
-    -> (flags -> ( model2, Cmd msg2 ))
-    -> (flags -> ( Both model1 model2, Cmd (Either msg1 msg2) ))
-initWith init1 init2 flags =
-    let
-        ( m2, c2 ) =
-            init2 flags
-
-        ( m1, c1 ) =
-            init1 flags
-    in
-    ( ( m1, m2 )
-    , Cmd.batch
-        [ Cmd.map Left c1
-        , Cmd.map Right c2
-        ]
-    )
-
-
-{-| Updates one of two submodels using corresponding subupdate function.
--}
-updateWith :
-    Update model1 msg1
-    -> Update model2 msg2
-    -> Update (Both model1 model2) (Either msg1 msg2)
-updateWith u1 u2 =
-    let
-        applyL f m =
-            Tuple.mapFirst (f m)
-                >> (\( ( x, c ), y ) -> ( ( x, y ), Cmd.map Left c ))
-
-        applyR f m =
-            Tuple.mapSecond (f m)
-                >> (\( x, ( y, c ) ) -> ( ( x, y ), Cmd.map Right c ))
-    in
-    Either.unpack (applyL u1) (applyR u2)
-
-
-{-| Combines two subscriptions.
--}
-subscribeWith :
-    Subscription model1 msg1
-    -> Subscription model2 msg2
-    -> Subscription (Both model1 model2) (Either msg1 msg2)
-subscribeWith s1 s2 ( m1, m2 ) =
-    Sub.batch
-        [ Sub.map Left <| s1 m1
-        , Sub.map Right <| s2 m2
-        ]
-
 
 {-| Combines two views into view for the SUM of models.
 -}

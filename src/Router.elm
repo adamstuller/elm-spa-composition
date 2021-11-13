@@ -7,9 +7,10 @@ import Either exposing (Either(..))
 import Html exposing (Html)
 import Html.Attributes exposing (default, href)
 import List.Nonempty as NE exposing (Nonempty)
-import Page exposing (ApplicationWithRouter, PageWidgetComposition, Route, subscribeWith)
+import Page exposing (ApplicationWithRouter, PageWidgetComposition, Route)
 import Url
 import Json.Decode
+import AltComposition.Effectfull exposing (subscribeWith)
 
 type alias Flags = Json.Decode.Value
 

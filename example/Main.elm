@@ -49,6 +49,6 @@ main =
         |> flip Page.add (CheckBox.initPageWidget "/checkbox4" True)
         |> flip Page.add (CheckBox.initPageWidget "/checkbox5" True)
         |> flip Page.add (TicToc.initPageWidget "/titktok2" 500)
-        |> flip Page.add (SimpleText.initPageWidget "/simpletext" "Text form initialization")
+        |> flip Page.add (SimpleText.initPageWidget "/simpletext" "Text from initialization")
         |> Router.initRouter title Navbar.navbar
         |> Browser.application
