@@ -1,17 +1,18 @@
 module Main exposing (main)
 
+import AltComposition.Common exposing (Both)
 import Browser
 import CheckBox
 import Counter
+import Either exposing (Either)
 import Flip exposing (flip)
 import Navbar exposing (navbar)
 import Page
 import Platform exposing (Router)
 import Router exposing (Navbar)
+import SimpleText
 import TicToc
 import Widget exposing (join)
-import AltComposition.Common exposing (Both)
-import Either exposing (Either)
 
 
 
@@ -30,7 +31,8 @@ import Either exposing (Either)
 --         |> join (CheckBox.initWidget True)
 --         |> Browser.sandbox
 
-title: String
+
+title : String
 title =
     "SPA simple demo"
 
@@ -47,5 +49,6 @@ main =
         |> flip Page.add (CheckBox.initPageWidget "/checkbox4" True)
         |> flip Page.add (CheckBox.initPageWidget "/checkbox5" True)
         |> flip Page.add (TicToc.initPageWidget "/titktok2" 500)
+        |> flip Page.add (SimpleText.initPageWidget "/simpletext" "Text form initialization")
         |> Router.initRouter title Navbar.navbar
         |> Browser.application
