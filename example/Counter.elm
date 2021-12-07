@@ -1,12 +1,11 @@
-module Counter exposing (initPageWidget, initWidget, Model, Msg)
+module Counter exposing (Model, Msg, initPageWidget, initWidget)
 
-import Composition.Pure exposing (View)
+import Common exposing (Subscription, Update, View)
 import Debug
 import Html exposing (..)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import Page exposing (PageWidget, Route)
-import Widget exposing (Widget)
 
 
 type alias Model =
@@ -43,7 +42,6 @@ update =
     always << max 0
 
 
-initWidget : Int -> Widget Model Msg
 initWidget int =
     { init = init int
     , update = update

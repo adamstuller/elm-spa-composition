@@ -5,7 +5,8 @@ module TicToc exposing (initPageWidget, Model)
 import Html exposing (Html)
 import Html.Attributes exposing (checked, type_)
 import Html.Events exposing (onClick)
-import Page exposing (PageWidget, Route, Subscription, Update, View)
+import Page exposing (PageWidget, Route)
+import Common exposing (View, Update, Subscription)
 import Time
 
 

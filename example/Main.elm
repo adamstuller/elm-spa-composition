@@ -1,35 +1,14 @@
 module Main exposing (main)
 
-import Composition.Common exposing (Both)
 import Browser
 import CheckBox
 import Counter
-import Either exposing (Either)
 import Flip exposing (flip)
-import Navbar exposing (navbar)
 import Page
-import Platform exposing (Router)
-import Router exposing (Navbar)
 import SimpleText
 import TicToc
-import Widget exposing (join)
-
-
-
--- main =
---     CheckBox.initWidget True
---         |> join (Counter.initWidget 0)
---         |> join (Counter.initWidget 1)
---         |> join (Counter.initWidget 1)
---         |> join (Counter.initWidget 2)
---         |> join (Counter.initWidget 3)
---         |> join (Counter.initWidget 4)
---         |> join (CheckBox.initWidget True)
---         |> join (CheckBox.initWidget True)
---         |> join (CheckBox.initWidget True)
---         |> join (CheckBox.initWidget True)
---         |> join (CheckBox.initWidget True)
---         |> Browser.sandbox
+import Router
+import Navbar
 
 
 title : String

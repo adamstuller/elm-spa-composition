@@ -1,11 +1,10 @@
-module SimpleText exposing (Model, Msg, initPageWidget, initWidget)
+module SimpleText exposing (Model, Msg, initPageWidget )
 
-import Composition.Pure exposing (View)
 import Html exposing (..)
 import Json.Decode exposing (Decoder, decodeValue, field, string)
 import Page exposing (PageWidget, Route)
+import Common exposing (View)
 import Router exposing (Flags)
-import Widget exposing (Widget)
 
 
 flagsDecoder : Decoder String
@@ -34,14 +33,6 @@ view m =
 update : Msg -> Model -> Model
 update =
     always identity
-
-
-initWidget : String -> Widget Model Msg
-initWidget s =
-    { init = init s
-    , update = update
-    , view = view
-    }
 
 
 initPageWidget : Route -> String -> PageWidget Model Msg Flags

@@ -2,7 +2,6 @@
     "type": "application",
     "source-directories": [
         "src",
-        "src/Composition",
         "utils",
         "example"
     ],
