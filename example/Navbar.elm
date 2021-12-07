@@ -12,12 +12,12 @@ viewLink path =
     li [] [ a [ href path ] [ text path ] ]
 
 
-navbar : Navbar
-navbar routingRules url =
+navbar : Navbar msg
+navbar routes state onNavbarExpandClicked url =
     div []
         [ text "The current URL is: "
         , b [] [ text (Url.toString url) ]
         , ul [] <|
             NE.toList <|
-                NE.map viewLink routingRules
+                NE.map viewLink routes
         ]
