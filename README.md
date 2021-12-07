@@ -3,4 +3,4 @@
 - [x] Flags
 - [ ] Nested components
 - [ ] Routes - with subroutes
-- [ ] Session or global state
+- [ ] Session or global state, Autorizacia
