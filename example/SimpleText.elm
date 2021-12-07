@@ -1,6 +1,6 @@
 module SimpleText exposing (Model, Msg, initPageWidget, initWidget)
 
-import AltComposition.Pure exposing (View)
+import Composition.Pure exposing (View)
 import Html exposing (..)
 import Json.Decode exposing (Decoder, decodeValue, field, string)
 import Page exposing (PageWidget, Route)

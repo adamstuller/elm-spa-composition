@@ -1,8 +1,8 @@
 module Page exposing (..)
 
-import AltComposition.Common exposing (Both)
-import AltComposition.Effectfull exposing (oneOfInits, orInit, subscribeEither, updateEither)
-import AltComposition.Pure exposing (View)
+import Composition.Common exposing (Both)
+import Composition.Effectfull exposing (oneOfInits, orInit, subscribeEither, updateEither)
+import Composition.Pure exposing (View)
 import Browser exposing (Document, UrlRequest)
 import Browser.Navigation as Navigation
 import Either exposing (Either(..))

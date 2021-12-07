@@ -1,7 +1,7 @@
 module Router exposing (Flags, Navbar, NavbarState, emptyNavbar, initRouter)
 
-import AltComposition.Common exposing (Both)
-import AltComposition.Effectfull exposing (subscribeWith)
+import Composition.Common exposing (Both)
+import Composition.Effectfull exposing (subscribeWith)
 import Browser exposing (UrlRequest)
 import Browser.Events exposing (onResize)
 import Browser.Navigation as Nav

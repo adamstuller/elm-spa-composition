@@ -2,7 +2,7 @@
     "type": "application",
     "source-directories": [
         "src",
-        "src/AltComposition",
+        "src/Composition",
         "utils",
         "example"
     ],

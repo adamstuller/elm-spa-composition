@@ -1,6 +1,6 @@
-module AltComposition.Effectfull exposing (..)
+module Composition.Effectfull exposing (..)
 
-import AltComposition.Common exposing (Both, Route)
+import Composition.Common exposing (Both, Route)
 import Either exposing (Either(..))
 import Html exposing (Html)
 import List.Nonempty as NE exposing (Nonempty)

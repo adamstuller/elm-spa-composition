@@ -1,4 +1,4 @@
-module AltComposition.Common exposing (..)
+module Composition.Common exposing (..)
 
 
 type alias Route =

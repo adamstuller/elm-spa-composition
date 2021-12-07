@@ -1,6 +1,6 @@
-module AltComposition.Pure exposing (Update, View, composeViews, initWith, joinViews, updateWith, viewBoth, viewWith)
+module Composition.Pure exposing (Update, View, composeViews, initWith, joinViews, updateWith, viewBoth, viewWith)
 
-import AltComposition.Common exposing (Both)
+import Composition.Common exposing (Both)
 import Either exposing (Either(..))
 import Html exposing (Html)
 import List

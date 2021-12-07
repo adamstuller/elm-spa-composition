@@ -1,6 +1,6 @@
 module Main exposing (main)
 
-import AltComposition.Common exposing (Both)
+import Composition.Common exposing (Both)
 import Browser
 import CheckBox
 import Counter

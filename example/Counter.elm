@@ -1,6 +1,6 @@
 module Counter exposing (initPageWidget, initWidget, Model, Msg)
 
-import AltComposition.Pure exposing (View)
+import Composition.Pure exposing (View)
 import Debug
 import Html exposing (..)
 import Html.Attributes exposing (style)
