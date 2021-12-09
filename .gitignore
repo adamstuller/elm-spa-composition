@@ -52,3 +52,7 @@ Temporary Items
 app.js
 
 node_modules
+
+docs 
+
+.doit.db
