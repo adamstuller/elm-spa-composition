@@ -1,28 +1,42 @@
-module Common exposing (Both, Route, Subscription, Update, View, Flags)
+module Common exposing
+    ( Both
+    , Subscription
+    , Update
+    , View
+    , Route
+    , Flags
+    , Params
+    )
 
 {-| This module contains basic types for elm architecture functions
 
-# Both 
 
-@docs Both 
+# Both
 
-# Subscription 
+@docs Both
+
+
+# Subscription
 
 @docs Subscription
 
-# Update 
+
+# Update
 
 @docs Update
 
-# View 
+
+# View
 
 @docs View
 
-# Route 
+
+# Route
 
 @docs Route
 
-# Flags 
+
+# Flags
 
 @docs Flags
 
@@ -30,43 +44,53 @@ module Common exposing (Both, Route, Subscription, Update, View, Flags)
 
 import Html exposing (Html)
 import Json.Decode
+import Url
+import Url.Parser exposing (Parser)
+
 
 {-| Subscription function type
-
 -}
 type alias Subscription model msg =
     model -> Sub msg
 
 
 {-| Update function type
-
 -}
 type alias Update model msg =
     msg -> model -> ( model, Cmd msg )
 
 
 {-| View function type
-
 -}
 type alias View model msg =
     model -> Html msg
 
 
 {-| Type representing route, for now just String
-
 -}
 type alias Route =
-    String
+    { parser : Parser (List String -> List String) (List String)
+    , route : String
+    }
+
 
 {-| Simple type used for better readability of tuple
 
-    Both a b == (a, b) 
+    Both a b == ( a, b )
 
 -}
 type alias Both a b =
     ( a, b )
 
+
 {-| Flags type used in the router
 -}
 type alias Flags =
     Json.Decode.Value
+
+
+type alias Params =
+    { flags : Flags
+    , url : Url.Url
+    , urlParams : List String
+    }

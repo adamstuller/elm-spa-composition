@@ -1,4 +1,4 @@
-module Counter exposing (Model, Msg, initPageWidget, initWidget)
+module Counter exposing (Model, Msg, initPageWidget, initWidget, parser)
 
 import Common exposing (Route, View)
 import Debug
@@ -6,6 +6,12 @@ import Html exposing (..)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import Page exposing (PageWidget)
+import Url.Parser exposing ((</>), Parser)
+
+
+parser : Parser (List String -> List String) (List String)
+parser =
+    Url.Parser.map [] (Url.Parser.s "counter")
 
 
 type alias Model =

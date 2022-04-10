@@ -1,5 +1,5 @@
 module Router exposing
-    ( Navbar, emptyNavbar, NavbarState
+    ( Navbar, NavbarState, emptyNavbar
     , initRouter
     )
 
@@ -20,7 +20,7 @@ module Router exposing
 import Browser exposing (UrlRequest)
 import Browser.Events exposing (onResize)
 import Browser.Navigation as Nav
-import Common exposing (Both, Flags, Route)
+import Common exposing (Both, Flags, Params, Route)
 import Composition exposing (subscribeWith)
 import Either exposing (Either(..))
 import Html exposing (Html)
@@ -29,6 +29,7 @@ import Json.Decode exposing (Decoder, decodeValue, field, int, map2)
 import List.Nonempty as NE exposing (Nonempty)
 import Page exposing (ApplicationWithRouter, PageWidgetComposition)
 import Url
+import Url.Parser
 
 
 flagsDecoder : Decoder Window
@@ -87,12 +88,39 @@ pathFromUrl rules url =
         default =
             NE.head rules
 
-        matchesUrl u ( p, r ) =
-            r == u.path
+        matchesUrl u ( p, { route, parser } ) =
+            case Url.Parser.parse parser u of
+                Just _ ->
+                    True
+
+                Nothing ->
+                    False
     in
     NE.filter (matchesUrl url) default rules
         |> NE.head
         |> Tuple.first
+
+
+paramsFromUrl : Nonempty ( path, Route ) -> Url.Url -> List String
+paramsFromUrl rules url =
+    let
+        default =
+            NE.head rules
+
+        matchesUrl u ( p, { route, parser } ) =
+            case Url.Parser.parse parser u of
+                Just _ ->
+                    True
+
+                Nothing ->
+                    False
+
+        r =
+            NE.filter (matchesUrl url) default rules
+                |> NE.head
+                |> Tuple.second
+    in
+    Maybe.withDefault [] <| Url.Parser.parse r.parser url
 
 
 routerSubscriptions : Model -> Sub Msg
@@ -107,7 +135,7 @@ routerSubscriptions model =
 initRouter :
     String
     -> Navbar Msg
-    -> PageWidgetComposition model msg path Flags
+    -> PageWidgetComposition model msg path Params
     -> ApplicationWithRouter (Both model Model) (Either msg Msg) Flags
 initRouter title n w =
     let
@@ -145,7 +173,7 @@ initRouter title n w =
                             UrlChanged newUrl ->
                                 let
                                     ( subModel, subCmd ) =
-                                        select (pathFromUrl routingRules newUrl) flags
+                                        select (pathFromUrl routingRules newUrl) { flags = flags, url = newUrl, urlParams = paramsFromUrl routingRules newUrl }
                                 in
                                 ( ( subModel, Model key url flags navbarState )
                                 , Cmd.map Left subCmd
@@ -154,7 +182,7 @@ initRouter title n w =
                             WindowSizeChanged window ->
                                 let
                                     ( subModel, subCmd ) =
-                                        select (pathFromUrl routingRules url) flags
+                                        select (pathFromUrl routingRules url) { flags = flags, url = url, urlParams = paramsFromUrl routingRules url }
 
                                     newNavbarState =
                                         { navbarState | window = window }
@@ -166,7 +194,7 @@ initRouter title n w =
                             NavbarExpandedClicked ->
                                 let
                                     ( subModel, subCmd ) =
-                                        select (pathFromUrl routingRules url) flags
+                                        select (pathFromUrl routingRules url) { flags = flags, url = url, urlParams = paramsFromUrl routingRules url }
 
                                     newNavbarState =
                                         { navbarState | expanded = not navbarState.expanded }
@@ -178,7 +206,7 @@ initRouter title n w =
         init flags url key =
             let
                 ( model, cmd ) =
-                    select (pathFromUrl routingRules url) flags
+                    select (pathFromUrl routingRules url) { flags = flags, url = url, urlParams = paramsFromUrl routingRules url }
 
                 window =
                     case decodeValue flagsDecoder flags of
@@ -198,7 +226,7 @@ initRouter title n w =
                 { title = title
                 , body =
                     [ Html.div []
-                        [ Html.map Right <| n routes navbarState NavbarExpandedClicked url
+                        [ Html.map Right <| n (NE.map .route routes) navbarState NavbarExpandedClicked url
                         , Html.map Left <| w.view models
                         ]
                     ]

@@ -18,6 +18,8 @@ navbar routes state onNavbarExpandClicked url =
         [ text "The current URL is: "
         , b [] [ text (Url.toString url) ]
         , ul [] <|
-            NE.toList <|
+            (NE.toList <|
                 NE.map viewLink routes
+            )
+                ++ [ li [] [ a [ href "/topic/8/user/22" ] [ text "/topic/8/user/22" ] ] ]
         ]

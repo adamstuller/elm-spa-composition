@@ -1,10 +1,16 @@
-module CheckBox exposing (Model, Msg, initPageWidget)
+module CheckBox exposing (Model, Msg, initPageWidget, parser)
 
 import Common exposing (Route)
 import Html exposing (Html)
 import Html.Attributes exposing (checked, type_)
 import Html.Events exposing (onClick)
 import Page exposing (PageWidget)
+import Url.Parser exposing (Parser)
+
+
+parser : Parser (List String -> List String) (List String)
+parser =
+    Url.Parser.map [] (Url.Parser.s "checkbox")
 
 
 type alias Model =
