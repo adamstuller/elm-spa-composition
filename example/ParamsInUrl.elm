@@ -1,6 +1,6 @@
 module ParamsInUrl exposing (Model, Msg, initPageWidget, parser)
 
-import Common exposing (Params, Route, View)
+import Common exposing (Params, RouteParser, View)
 import Html exposing (..)
 import List exposing (head, tail)
 import Page exposing (PageWidget)
@@ -44,7 +44,7 @@ update =
     always identity
 
 
-initPageWidget : Route -> PageWidget Model Msg Params
+initPageWidget : RouteParser -> PageWidget Model Msg Params
 initPageWidget route =
     let
         updateEffectfull =

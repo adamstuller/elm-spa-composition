@@ -6,7 +6,7 @@ import Html exposing (Html)
 import Html.Attributes exposing (checked, type_)
 import Html.Events exposing (onClick)
 import Page exposing (PageWidget)
-import Common exposing (Route)
+import Common exposing (RouteParser)
 import Common exposing (View, Update, Subscription)
 import Time
 
@@ -74,7 +74,7 @@ sub model =
         Sub.none
 
 
-initPageWidget : Route -> Float -> PageWidget Model Msg flags
+initPageWidget : RouteParser -> Float -> PageWidget Model Msg flags
 initPageWidget route float =
     { init = ( init float, route )
     , update = update

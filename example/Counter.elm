@@ -1,6 +1,6 @@
 module Counter exposing (Model, Msg, initPageWidget, initWidget, parser)
 
-import Common exposing (Route, View)
+import Common exposing (RouteParser, View)
 import Debug
 import Html exposing (..)
 import Html.Attributes exposing (style)
@@ -55,7 +55,7 @@ initWidget int =
     }
 
 
-initPageWidget : Route -> Int -> PageWidget Model Msg flags
+initPageWidget : RouteParser -> Int -> PageWidget Model Msg flags
 initPageWidget route int =
     let
         updateEffectfull =

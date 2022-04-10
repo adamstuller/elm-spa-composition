@@ -20,7 +20,7 @@ module Router exposing
 import Browser exposing (UrlRequest)
 import Browser.Events exposing (onResize)
 import Browser.Navigation as Nav
-import Common exposing (Both, Flags, Params, Route)
+import Common exposing (Both, Flags, Params, RouteParser)
 import Composition exposing (subscribeWith)
 import Either exposing (Either(..))
 import Html exposing (Html)
@@ -72,23 +72,23 @@ type Msg
 {-| Navbar type. Function that returns view of navbar.
 -}
 type alias Navbar msg =
-    Nonempty String -> NavbarState -> msg -> Url.Url -> Html msg
+    NavbarState -> msg -> Url.Url -> Html msg
 
 
 {-| Simplest empty navbar
 -}
 emptyNavbar : Navbar msg
-emptyNavbar routingRules navbarState onNavbarExpandClicked url =
+emptyNavbar navbarState onNavbarExpandClicked url =
     Html.div [] []
 
 
-pathFromUrl : Nonempty ( path, Route ) -> Url.Url -> path
+pathFromUrl : Nonempty ( path, RouteParser ) -> Url.Url -> path
 pathFromUrl rules url =
     let
         default =
             NE.head rules
 
-        matchesUrl u ( p, { route, parser } ) =
+        matchesUrl u ( p, parser ) =
             case Url.Parser.parse parser u of
                 Just _ ->
                     True
@@ -101,13 +101,13 @@ pathFromUrl rules url =
         |> Tuple.first
 
 
-paramsFromUrl : Nonempty ( path, Route ) -> Url.Url -> List String
+paramsFromUrl : Nonempty ( path, RouteParser ) -> Url.Url -> List String
 paramsFromUrl rules url =
     let
         default =
             NE.head rules
 
-        matchesUrl u ( p, { route, parser } ) =
+        matchesUrl u ( p, parser ) =
             case Url.Parser.parse parser u of
                 Just _ ->
                     True
@@ -115,12 +115,12 @@ paramsFromUrl rules url =
                 Nothing ->
                     False
 
-        r =
+        routeParser =
             NE.filter (matchesUrl url) default rules
                 |> NE.head
                 |> Tuple.second
     in
-    Maybe.withDefault [] <| Url.Parser.parse r.parser url
+    Maybe.withDefault [] <| Url.Parser.parse routeParser url
 
 
 routerSubscriptions : Model -> Sub Msg
@@ -226,7 +226,7 @@ initRouter title n w =
                 { title = title
                 , body =
                     [ Html.div []
-                        [ Html.map Right <| n (NE.map .route routes) navbarState NavbarExpandedClicked url
+                        [ Html.map Right <| n navbarState NavbarExpandedClicked url
                         , Html.map Left <| w.view models
                         ]
                     ]

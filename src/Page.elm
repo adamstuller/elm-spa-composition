@@ -19,7 +19,7 @@ module Page exposing
 
 import Browser exposing (UrlRequest)
 import Browser.Navigation as Navigation
-import Common exposing (Both, Route, Subscription, Update, View)
+import Common exposing (Both, RouteParser, Subscription, Update, View)
 import Composition exposing (oneOfInits, orInit, subscribeEither, updateEither, viewEither)
 import Either exposing (Either(..))
 import List.Nonempty exposing (Nonempty)
@@ -29,7 +29,7 @@ import Url
 {-| Type for widet that represents page. Contains all basic elm architecture functions that need to be implemented in respective page modules.
 -}
 type alias PageWidget model msg flags =
-    { init : Both (flags -> ( model, Cmd msg )) Route
+    { init : Both (flags -> ( model, Cmd msg )) RouteParser
     , view : View model msg
     , update : Update model msg
     , subscriptions : Subscription model msg
@@ -39,7 +39,7 @@ type alias PageWidget model msg flags =
 {-| Page composition in progress. Is created by join function.
 -}
 type alias PageWidgetComposition model msg path flags =
-    { init : ( path -> flags -> ( model, Cmd msg ), Nonempty path, Nonempty Route )
+    { init : ( path -> flags -> ( model, Cmd msg ), Nonempty path, Nonempty RouteParser )
     , view : View model msg
     , update : Update model msg
     , subscriptions : Subscription model msg

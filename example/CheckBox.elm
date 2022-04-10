@@ -1,6 +1,6 @@
 module CheckBox exposing (Model, Msg, initPageWidget, parser)
 
-import Common exposing (Route)
+import Common exposing (RouteParser)
 import Html exposing (Html)
 import Html.Attributes exposing (checked, type_)
 import Html.Events exposing (onClick)
@@ -41,7 +41,7 @@ update =
     always not
 
 
-initPageWidget : Route -> Bool -> PageWidget Model Msg flags
+initPageWidget : RouteParser -> Bool -> PageWidget Model Msg flags
 initPageWidget route bool =
     let
         updateEffectfull =

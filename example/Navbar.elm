@@ -13,13 +13,16 @@ viewLink path =
 
 
 navbar : Navbar msg
-navbar routes state onNavbarExpandClicked url =
+navbar state onNavbarExpandClicked url =
     div []
         [ text "The current URL is: "
         , b [] [ text (Url.toString url) ]
         , ul [] <|
-            (NE.toList <|
-                NE.map viewLink routes
-            )
-                ++ [ li [] [ a [ href "/topic/8/user/22" ] [ text "/topic/8/user/22" ] ] ]
+            [ li [] [ a [ href "/topic/8/user/22" ] [ text "/topic/8/user/22" ] ]
+            , li [] [ a [ href "/topic/9/user/23" ] [ text "/topic/9/user/23" ] ]
+            , li [] [ a [ href "/checkbox" ] [ text "checkbox" ] ]
+            , li [] [ a [ href "/tiktok" ] [ text "tiktok" ] ]
+            , li [] [ a [ href "/simpleText" ] [ text "simpleText" ] ]
+            , li [] [ a [ href "/counter" ] [ text "counter" ] ]
+            ]
         ]

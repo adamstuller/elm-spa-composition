@@ -3,9 +3,8 @@ module Common exposing
     , Subscription
     , Update
     , View
-    , Route
     , Flags
-    , Params
+    , Params, RouteParser, basicParser
     )
 
 {-| This module contains basic types for elm architecture functions
@@ -68,10 +67,13 @@ type alias View model msg =
 
 {-| Type representing route, for now just String
 -}
-type alias Route =
-    { parser : Parser (List String -> List String) (List String)
-    , route : String
-    }
+type alias RouteParser =
+    Parser (List String -> List String) (List String)
+
+
+basicParser : String -> Parser (List String -> List String) (List String)
+basicParser s =
+    Url.Parser.map [] (Url.Parser.s s)
 
 
 {-| Simple type used for better readability of tuple

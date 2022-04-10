@@ -18,7 +18,7 @@ This composition creates new functions with tuple of models of its respective pa
 
 -}
 
-import Common exposing (Both, Route, Subscription, Update, View)
+import Common exposing (Both, RouteParser, Subscription, Update, View)
 import Either exposing (Either(..))
 import Html exposing (Html)
 import List.Nonempty as NE exposing (Nonempty)
@@ -28,9 +28,9 @@ import List.Nonempty as NE exposing (Nonempty)
 
 -}
 oneOfInits :
-    Both (flags -> ( model1, Cmd msg1 )) Route
-    -> Both (flags -> ( model2, Cmd msg2 )) Route
-    -> ( Either () () -> flags -> ( Either model1 model2, Cmd (Either msg1 msg2) ), Nonempty (Either () ()), Nonempty Route )
+    Both (flags -> ( model1, Cmd msg1 )) RouteParser
+    -> Both (flags -> ( model2, Cmd msg2 )) RouteParser
+    -> ( Either () () -> flags -> ( Either model1 model2, Cmd (Either msg1 msg2) ), Nonempty (Either () ()), Nonempty RouteParser )
 oneOfInits ( init1, route1 ) ( init2, route2 ) =
     ( \path ->
         case path of
@@ -47,9 +47,9 @@ oneOfInits ( init1, route1 ) ( init2, route2 ) =
 {-| Adds an another init to init composition
 -}
 orInit :
-    ( path -> flags -> ( model1, Cmd msg1 ), Nonempty path, Nonempty Route )
-    -> Both (flags -> ( model2, Cmd msg2 )) Route
-    -> ( Either path () -> flags -> ( Either model1 model2, Cmd (Either msg1 msg2) ), Nonempty (Either path ()), Nonempty Route )
+    ( path -> flags -> ( model1, Cmd msg1 ), Nonempty path, Nonempty RouteParser )
+    -> Both (flags -> ( model2, Cmd msg2 )) RouteParser
+    -> ( Either path () -> flags -> ( Either model1 model2, Cmd (Either msg1 msg2) ), Nonempty (Either path ()), Nonempty RouteParser )
 orInit ( next, ps, routes ) ( init2, route2 ) =
     ( \path ->
         case path of
