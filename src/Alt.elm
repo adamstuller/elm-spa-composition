@@ -1,33 +1,39 @@
 module Alt exposing
-    ( ApplicationWithRouter
-    , Both
-    , Flags
-    , Footer
-    , Header
-    , PageWidget
-    , PageWidgetComposition
-    , Params
-    , RouteParser
-    , Subscription
-    , Update
-    , View
-    , WindowState
-    , add
-    , basicParser
-    , emptyFooter
-    , emptyHeader
+    ( Subscription, Update, View, Both, Flags, Params
+    , RouteParser, basicParser, topParser
+    , PageWidget, PageWidgetComposition, join, add
+    , Header, Footer, emptyHeader, emptyFooter, WindowState
     , initRouter
-    , initWith
-    , join
-    , oneOfInits
-    , orInit
-    , subscribeEither
-    , subscribeWith
-    , topParser
-    , updateEither
-    , updateWith
-    , viewEither
     )
+
+{-| Elegant elm single pages composition. Aims at removing boilerplate code generated as byproduct of pages composition in SPAs.
+
+
+# Helper types
+
+@docs Subscription, Update, View, Both, Flags, Params
+
+
+# Url parsing
+
+@docs RouteParser, basicParser, topParser
+
+
+# Composition
+
+@docs PageWidget, PageWidgetComposition, join, add
+
+
+# Header and footer
+
+@docs Header, Footer, emptyHeader, emptyFooter, WindowState
+
+
+# Router
+
+@docs initRouter
+
+-}
 
 import Browser exposing (UrlRequest)
 import Browser.Events exposing (onResize)
