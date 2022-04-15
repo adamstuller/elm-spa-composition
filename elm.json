@@ -1,6 +1,6 @@
 {
   "type": "package",
-  "name": "adamstuller/alt-composition",
+  "name": "adamstuller/elm-spa-composition",
   "summary": "School project for master's thesis enabling page composition in Elm SPAs.",
   "license": "BSD-3-Clause",
   "version": "1.0.0",
