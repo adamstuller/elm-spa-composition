@@ -6,7 +6,14 @@ Body of the project is located in the _src_ directory. Directory _example_ conta
 
 ## How to run the example
 
-Run the example using _elm reactor_.
+The simplest way to run the example is by using _elm reactor_.
+
+For spa serving I used [http-server-spa](https://www.npmjs.com/package/http-server-spa). So if you want to use the same server, follow steps on the webpage to install it. Any webserver can be used however.
+
+To run the example follow these steps:
+
+1. `elm make example/Main.elm --output app.js`
+2. `http-server-spa .`
 
 ## How to use it in another project
 
