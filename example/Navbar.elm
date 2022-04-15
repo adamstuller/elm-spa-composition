@@ -1,28 +1,32 @@
-module Navbar exposing (navbar)
+module Navbar exposing (footer, header)
 
+import Alt exposing (Footer, Header)
 import Html exposing (Html, a, b, div, li, text, ul)
 import Html.Attributes exposing (href)
-import List.Nonempty as NE
-import Alt exposing (Navbar)
 import Url
 
 
-viewLink : String -> Html msg
-viewLink path =
-    li [] [ a [ href path ] [ text path ] ]
+viewLink : String -> String -> Html msg
+viewLink path value =
+    li [] [ a [ href path ] [ text value ] ]
 
 
-navbar : Navbar msg
-navbar state onNavbarExpandClicked url =
+header : Header msg
+header _ _ url =
     div []
         [ text "The current URL is: "
         , b [] [ text (Url.toString url) ]
         , ul [] <|
-            [ li [] [ a [ href "/topic/8/user/22" ] [ text "/topic/8/user/22" ] ]
-            , li [] [ a [ href "/topic/9/user/23" ] [ text "/topic/9/user/23" ] ]
-            , li [] [ a [ href "/checkbox" ] [ text "checkbox" ] ]
-            , li [] [ a [ href "/tiktok" ] [ text "tiktok" ] ]
-            , li [] [ a [ href "/simpleText" ] [ text "simpleText" ] ]
-            , li [] [ a [ href "/counter" ] [ text "counter" ] ]
+            [ viewLink "/topic/8/user/22" "/topic/8/user/22"
+            , viewLink "/topic/9/user/23" "/topic/9/user/23"
+            , viewLink "/checkbox" "/checkbox"
+            , viewLink "/tiktok"  "/tiktok" 
+            , viewLink "/simpleText" "/simpleText"
+            , viewLink "/counter" "/counter"
             ]
         ]
+
+
+footer : Footer msg
+footer =
+    div [] [ text "SIMPLE FOOTER" ]

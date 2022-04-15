@@ -1,45 +1,33 @@
 module Alt exposing
-    ( Both
+    ( ApplicationWithRouter
+    , Both
+    , Flags
+    , Footer
+    , Header
+    , PageWidget
+    , PageWidgetComposition
+    , Params
+    , RouteParser
     , Subscription
     , Update
     , View
-    , Flags
-    , ApplicationWithRouter, Navbar, NavbarState, PageWidget, PageWidgetComposition, Params, RouteParser, add, basicParser, emptyNavbar, initRouter, initWith, join, oneOfInits, orInit, subscribeEither, subscribeWith, topParser, updateEither, updateWith, viewEither
+    , WindowState
+    , add
+    , basicParser
+    , emptyFooter
+    , emptyHeader
+    , initRouter
+    , initWith
+    , join
+    , oneOfInits
+    , orInit
+    , subscribeEither
+    , subscribeWith
+    , topParser
+    , updateEither
+    , updateWith
+    , viewEither
     )
-
-{-| This module contains basic types for elm architecture functions
-
-
-# Both
-
-@docs Both
-
-
-# Subscription
-
-@docs Subscription
-
-
-# Update
-
-@docs Update
-
-
-# View
-
-@docs View
-
-
-# Route
-
-@docs Route
-
-
-# Flags
-
-@docs Flags
-
--}
 
 import Browser exposing (UrlRequest)
 import Browser.Events exposing (onResize)
@@ -51,6 +39,10 @@ import Json.Decode exposing (Decoder, decodeValue, field, int, map2)
 import List.Nonempty as NE exposing (Nonempty)
 import Url
 import Url.Parser exposing (Parser)
+
+
+
+-- HELPER TYPES
 
 
 {-| Subscription function type
@@ -71,22 +63,6 @@ type alias View model msg =
     model -> Html msg
 
 
-{-| Type representing route, for now just String
--}
-type alias RouteParser =
-    Parser (List String -> List String) (List String)
-
-
-basicParser : String -> Parser (List String -> List String) (List String)
-basicParser s =
-    Url.Parser.map [] (Url.Parser.s s)
-
-
-topParser : Parser (List String -> List String) (List String)
-topParser =
-    Url.Parser.map [] Url.Parser.top
-
-
 {-| Simple type used for better readability of tuple
 
     Both a b == ( a, b )
@@ -96,18 +72,47 @@ type alias Both a b =
     ( a, b )
 
 
-{-| Flags type used in the router
+{-| Flags type. Should be as much generic as possible so anything can be passed by it and each modules parses the flags alone.
 -}
 type alias Flags =
     Json.Decode.Value
 
 
+{-| Params is record that router passes to each Page on initialization.
+-}
 type alias Params =
     { flags : Flags
     , url : Url.Url
     , urlParams : List String
     , key : Nav.Key
     }
+
+
+{-| Parses url and returns list of strings. This is again the most generic approach.
+In every Page, parser can be defined and exposed along with the function to transform list of strings to
+required data type.
+-}
+type alias RouteParser =
+    Parser (List String -> List String) (List String)
+
+
+{-| Predefined function that takes one string and returns parser that parses this one path and returns empty list.
+-}
+basicParser : String -> Parser (List String -> List String) (List String)
+basicParser s =
+    Url.Parser.map [] (Url.Parser.s s)
+
+
+{-| Predefined parser that parses "/" path and returns empty list.
+-}
+topParser : Parser (List String -> List String) (List String)
+topParser =
+    Url.Parser.map [] Url.Parser.top
+
+
+
+--- Composition functions
+--- Init composition
 
 
 {-| Starts the combination of init functions. Adding another init function is done by orInit function.
@@ -333,7 +338,7 @@ type alias Model =
     { key : Nav.Key
     , url : Url.Url
     , flags : Flags
-    , navbarState : NavbarState
+    , navbarState : WindowState
     }
 
 
@@ -346,7 +351,7 @@ type alias Window =
 {-| State that navbar expects. When implementing custom navbar, this state can be accessed.
 Contains window to determine the shape of navbar and information whether it is collapsed or not.
 -}
-type alias NavbarState =
+type alias WindowState =
     { window : Window
     , expanded : Bool
     }
@@ -359,16 +364,29 @@ type Msg
     | NavbarExpandedClicked
 
 
-{-| Navbar type. Function that returns view of navbar.
+{-| Header type. Function that returns view of header.
 -}
-type alias Navbar msg =
-    NavbarState -> msg -> Url.Url -> Html msg
+type alias Header msg =
+    WindowState -> msg -> Url.Url -> Html msg
 
 
-{-| Simplest empty navbar
+{-| Footer type. Just view displayed on the bottom of the application.
 -}
-emptyNavbar : Navbar msg
-emptyNavbar navbarState onNavbarExpandClicked url =
+type alias Footer msg =
+    Html msg
+
+
+{-| Simplest empty header
+-}
+emptyHeader : Header msg
+emptyHeader _ _ _ =
+    Html.div [] []
+
+
+{-| Simplest empty footer
+-}
+emptyFooter : Footer Msg
+emptyFooter =
     Html.div [] []
 
 
@@ -414,7 +432,7 @@ paramsFromUrl rules url =
 
 
 routerSubscriptions : Model -> Sub Msg
-routerSubscriptions model =
+routerSubscriptions _ =
     onResize <|
         \width height ->
             WindowSizeChanged { width = width, height = height }
@@ -424,10 +442,11 @@ routerSubscriptions model =
 -}
 initRouter :
     String
-    -> Navbar Msg
+    -> Header Msg
+    -> Footer Msg
     -> PageWidgetComposition model msg path Params
     -> ApplicationWithRouter (Both model Model) (Either msg Msg) Flags
-initRouter title n w =
+initRouter title h f w =
     let
         ( select, paths, routes ) =
             w.init
@@ -516,8 +535,9 @@ initRouter title n w =
                 { title = title
                 , body =
                     [ Html.div []
-                        [ Html.map Right <| n navbarState NavbarExpandedClicked url
+                        [ Html.map Right <| h navbarState NavbarExpandedClicked url
                         , Html.map Left <| w.view models
+                        , Html.map Right <| f
                         ]
                     ]
                 }
