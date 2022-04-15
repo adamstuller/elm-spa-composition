@@ -1,9 +1,8 @@
 module ParamsInUrl exposing (Model, Msg, initPageWidget, parser)
 
-import Common exposing (Params, RouteParser, View)
+import Alt exposing (PageWidget, Params, RouteParser, View)
 import Html exposing (..)
 import List exposing (head, tail)
-import Page exposing (PageWidget)
 import Url.Parser exposing ((</>), Parser)
 
 

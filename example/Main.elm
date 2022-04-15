@@ -2,13 +2,11 @@ module Main exposing (main)
 
 import Browser
 import CheckBox
-import Common exposing (basicParser)
+import Alt exposing (basicParser, initRouter, add, join)
 import Counter
 import Flip exposing (flip)
 import Navbar
-import Page
 import ParamsInUrl
-import Router
 import SimpleText
 import TicToc
 
@@ -20,16 +18,9 @@ title =
 
 main =
     ParamsInUrl.initPageWidget ParamsInUrl.parser
-        |> Page.join (Counter.initPageWidget Counter.parser 12)
-        |> flip Page.add (CheckBox.initPageWidget CheckBox.parser True)
-        -- |> flip Page.add (CheckBox.initPageWidget "/checkbox2" True)
-        -- |> flip Page.add (CheckBox.initPageWidget "/checkbox3" True)
-        -- |> flip Page.add (CheckBox.initPageWidget "/checkbox4" True)
-        -- |> flip Page.add (Counter.initPageWidget "/counter2" 1000)
-        -- |> flip Page.add (CheckBox.initPageWidget "/checkbox3" True)
-        -- |> flip Page.add (CheckBox.initPageWidget "/checkbox4" True)
-        -- |> flip Page.add (CheckBox.initPageWidget "/checkbox5" True)
-        |> flip Page.add (TicToc.initPageWidget (basicParser "tiktok") 500)
-        |> flip Page.add (SimpleText.initPageWidget (basicParser "simpleText") "Text from initialization")
-        |> Router.initRouter title Navbar.navbar
+        |> join (Counter.initPageWidget Counter.parser 12)
+        |> flip add (CheckBox.initPageWidget CheckBox.parser True)
+        |> flip add (TicToc.initPageWidget (basicParser "tiktok") 500)
+        |> flip add (SimpleText.initPageWidget (basicParser "simpleText") "Text from initialization")
+        |> initRouter title Navbar.navbar
         |> Browser.application

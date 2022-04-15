@@ -3,7 +3,7 @@ module Navbar exposing (navbar)
 import Html exposing (Html, a, b, div, li, text, ul)
 import Html.Attributes exposing (href)
 import List.Nonempty as NE
-import Router exposing (Navbar)
+import Alt exposing (Navbar)
 import Url
 
 

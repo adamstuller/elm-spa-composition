@@ -1,9 +1,8 @@
 module SimpleText exposing (Model, Msg, initPageWidget)
 
-import Common exposing (Params, RouteParser, View)
+import Alt exposing (PageWidget, Params, RouteParser, View)
 import Html exposing (..)
 import Json.Decode exposing (Decoder, decodeValue, field, string)
-import Page exposing (PageWidget)
 
 
 flagsDecoder : Decoder String

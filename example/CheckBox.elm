@@ -1,10 +1,9 @@
 module CheckBox exposing (Model, Msg, initPageWidget, parser)
 
-import Common exposing (RouteParser)
+import Alt exposing (RouteParser, PageWidget)
 import Html exposing (Html)
 import Html.Attributes exposing (checked, type_)
 import Html.Events exposing (onClick)
-import Page exposing (PageWidget)
 import Url.Parser exposing (Parser)
 
 

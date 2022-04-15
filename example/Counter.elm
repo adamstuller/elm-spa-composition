@@ -1,11 +1,10 @@
 module Counter exposing (Model, Msg, initPageWidget, initWidget, parser)
 
-import Common exposing (RouteParser, View)
+import Alt exposing (RouteParser, View, PageWidget)
 import Debug
 import Html exposing (..)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
-import Page exposing (PageWidget)
 import Url.Parser exposing ((</>), Parser)
 
 
