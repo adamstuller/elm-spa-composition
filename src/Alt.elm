@@ -281,8 +281,8 @@ viewEither v1 v2 m =
 
 {-| Type for widet that represents page. Contains all basic elm architecture functions that need to be implemented in respective page modules.
 -}
-type alias PageWidget model msg flags =
-    { init : Both (flags -> ( model, Cmd msg )) RouteParser
+type alias PageWidget model msg params =
+    { init : Both (params -> ( model, Cmd msg )) RouteParser
     , view : View model msg
     , update : Update model msg
     , subscriptions : Subscription model msg
@@ -291,8 +291,8 @@ type alias PageWidget model msg flags =
 
 {-| Page composition in progress. Is created by join function.
 -}
-type alias PageWidgetComposition model msg path flags =
-    { init : ( path -> flags -> ( model, Cmd msg ), Nonempty path, Nonempty RouteParser )
+type alias PageWidgetComposition model msg path params =
+    { init : ( path -> params -> ( model, Cmd msg ), Nonempty path, Nonempty RouteParser )
     , view : View model msg
     , update : Update model msg
     , subscriptions : Subscription model msg
