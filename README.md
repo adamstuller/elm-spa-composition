@@ -31,6 +31,7 @@ In this repository code in main module looks like this:
 main =
     Home.initPage topParser
         |> join (Form.initPage <| basicParser "form")
+        |> add (Another.initPage <| basicParser "another")
         |> initRouter "Tábor bizón" viewHeader viewFooter
         |> Browser.application
 ```

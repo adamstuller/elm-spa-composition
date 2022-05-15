@@ -3,7 +3,7 @@
     "name": "adamstuller/elm-spa-composition",
     "summary": "School project for master's thesis enabling page composition in Elm SPAs.",
     "license": "BSD-3-Clause",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "exposed-modules": [
         "Alt"
     ],

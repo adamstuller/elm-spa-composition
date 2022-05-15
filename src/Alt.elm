@@ -124,17 +124,17 @@ topParser =
 {-| Starts the combination of init functions. Adding another init function is done by orInit function.
 -}
 oneOfInits :
-    Both (flags -> ( model1, Cmd msg1 )) RouteParser
-    -> Both (flags -> ( model2, Cmd msg2 )) RouteParser
-    -> ( Either () () -> flags -> ( Either model1 model2, Cmd (Either msg1 msg2) ), Nonempty (Either () ()), Nonempty RouteParser )
+    Both (params -> ( model1, Cmd msg1 )) RouteParser
+    -> Both (params -> ( model2, Cmd msg2 )) RouteParser
+    -> ( Either () () -> params -> ( Either model1 model2, Cmd (Either msg1 msg2) ), Nonempty (Either () ()), Nonempty RouteParser )
 oneOfInits ( init1, route1 ) ( init2, route2 ) =
     ( \path ->
         case path of
             Left () ->
-                \flags -> Tuple.mapBoth Left (Cmd.map Left) <| init1 flags
+                \params -> Tuple.mapBoth Left (Cmd.map Left) <| init1 params
 
             Right () ->
-                \flags -> Tuple.mapBoth Right (Cmd.map Right) <| init2 flags
+                \params -> Tuple.mapBoth Right (Cmd.map Right) <| init2 params
     , NE.cons (Left ()) <| NE.fromElement (Right ())
     , NE.cons route1 <| NE.fromElement route2
     )
@@ -143,19 +143,19 @@ oneOfInits ( init1, route1 ) ( init2, route2 ) =
 {-| Adds an another init to init composition
 -}
 orInit :
-    ( path -> flags -> ( model1, Cmd msg1 ), Nonempty path, Nonempty RouteParser )
-    -> Both (flags -> ( model2, Cmd msg2 )) RouteParser
-    -> ( Either path () -> flags -> ( Either model1 model2, Cmd (Either msg1 msg2) ), Nonempty (Either path ()), Nonempty RouteParser )
+    ( path -> params -> ( model1, Cmd msg1 ), Nonempty path, Nonempty RouteParser )
+    -> Both (params -> ( model2, Cmd msg2 )) RouteParser
+    -> ( Either path () -> params -> ( Either model1 model2, Cmd (Either msg1 msg2) ), Nonempty (Either path ()), Nonempty RouteParser )
 orInit ( next, ps, routes ) ( init2, route2 ) =
     ( \path ->
         case path of
             Left p ->
-                \flags ->
-                    Tuple.mapBoth Left (Cmd.map Left) <| next p flags
+                \params ->
+                    Tuple.mapBoth Left (Cmd.map Left) <| next p params
 
             Right () ->
-                \flags ->
-                    Tuple.mapBoth Right (Cmd.map Right) <| init2 flags
+                \params ->
+                    Tuple.mapBoth Right (Cmd.map Right) <| init2 params
     , NE.append
         (NE.map Left ps)
       <|
@@ -168,16 +168,16 @@ orInit ( next, ps, routes ) ( init2, route2 ) =
 {-| Combines two init functions.
 -}
 initWith :
-    (flags -> ( model1, Cmd msg1 ))
-    -> (flags -> ( model2, Cmd msg2 ))
-    -> (flags -> ( Both model1 model2, Cmd (Either msg1 msg2) ))
-initWith init1 init2 flags =
+    (params -> ( model1, Cmd msg1 ))
+    -> (params -> ( model2, Cmd msg2 ))
+    -> (params -> ( Both model1 model2, Cmd (Either msg1 msg2) ))
+initWith init1 init2 params =
     let
         ( m2, c2 ) =
-            init2 flags
+            init2 params
 
         ( m1, c1 ) =
-            init1 flags
+            init1 params
     in
     ( ( m1, m2 )
     , Cmd.batch
@@ -301,8 +301,8 @@ type alias PageWidgetComposition model msg path params =
 
 {-| Parameter for single page applications. Is created by attaching router to PageWidgetComposition
 -}
-type alias ApplicationWithRouter model msg flags =
-    { init : flags -> Url.Url -> Nav.Key -> ( model, Cmd msg )
+type alias ApplicationWithRouter model msg params =
+    { init : params -> Url.Url -> Nav.Key -> ( model, Cmd msg )
     , view : model -> Browser.Document msg
     , update : Update model msg
     , subscriptions : Subscription model msg
@@ -313,7 +313,7 @@ type alias ApplicationWithRouter model msg flags =
 
 {-| Combines first two pages and creates PageWidgetComposition. Is followed by add function.
 -}
-join : PageWidget model1 msg1 flags -> PageWidget model2 msg2 flags -> PageWidgetComposition (Either model1 model2) (Either msg1 msg2) (Either () ()) flags
+join : PageWidget model1 msg1 params -> PageWidget model2 msg2 params -> PageWidgetComposition (Either model1 model2) (Either msg1 msg2) (Either () ()) params
 join w1 w2 =
     { init = oneOfInits w1.init w2.init
     , view = viewEither w1.view w2.view
@@ -324,7 +324,7 @@ join w1 w2 =
 
 {-| Adds another PageWidget to PageWidgetComposition.
 -}
-add : PageWidgetComposition model1 msg1 path flags -> PageWidget model2 msg2 flags -> PageWidgetComposition (Either model1 model2) (Either msg1 msg2) (Either path ()) flags
+add : PageWidgetComposition model1 msg1 path params -> PageWidget model2 msg2 params -> PageWidgetComposition (Either model1 model2) (Either msg1 msg2) (Either path ()) params
 add w1 w2 =
     { init = orInit w1.init w2.init
     , view = viewEither w1.view w2.view
